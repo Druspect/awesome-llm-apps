@@ -174,6 +174,15 @@ We're launching a Global AI Agent Hackathon in collaboration with AI Agent ecosy
 
 4. **Follow the project-specific instructions** in each project's `README.md` file to set up and run the app.
 
+## 🧪 Running Tests
+
+Unit tests use **pytest**. Install the testing requirements and run the tests from the repository root:
+
+```bash
+pip install -r requirements.txt
+pytest
+```
+
 ## 🤝 Contributing to Open Source
 
 Contributions are welcome! If you have any ideas, improvements, or new apps to add, please create a new [GitHub Issue](https://github.com/Shubhamsaboo/awesome-llm-apps/issues) or submit a pull request. Make sure to follow the existing project structure and include a detailed `README.md` for each new app.
