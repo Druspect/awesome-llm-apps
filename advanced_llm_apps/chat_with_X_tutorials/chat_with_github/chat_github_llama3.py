@@ -5,7 +5,11 @@ from embedchain.loaders.github import GithubLoader
 import streamlit as st
 import os
 
-GITHUB_TOKEN = os.getenv("Your GitHub Token")
+# GitHub access token must be provided via the `GITHUB_TOKEN` environment
+# variable. Create a personal access token with appropriate permissions and
+# export it before running the app:
+#   export GITHUB_TOKEN=your-token
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 def get_loader():
     loader = GithubLoader(
