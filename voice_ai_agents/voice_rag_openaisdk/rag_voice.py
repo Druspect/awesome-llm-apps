@@ -104,28 +104,34 @@ def setup_qdrant() -> Tuple[QdrantClient, TextEmbedding]:
 
 def process_pdf(file) -> List:
     """Process PDF file and split into chunks with metadata."""
+    tmp_path = None
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
             tmp_file.write(file.getvalue())
-            loader = PyPDFLoader(tmp_file.name)
-            documents = loader.load()
-            
-            # Add source metadata
-            for doc in documents:
-                doc.metadata.update({
-                    "source_type": "pdf",
-                    "file_name": file.name,
-                    "timestamp": datetime.now().isoformat()
-                })
-            
-            text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=200
-            )
-            return text_splitter.split_documents(documents)
+            tmp_path = tmp_file.name
+
+        loader = PyPDFLoader(tmp_path)
+        documents = loader.load()
+
+        # Add source metadata
+        for doc in documents:
+            doc.metadata.update({
+                "source_type": "pdf",
+                "file_name": file.name,
+                "timestamp": datetime.now().isoformat(),
+            })
+
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=200,
+        )
+        return text_splitter.split_documents(documents)
     except Exception as e:
         st.error(f"📄 PDF processing error: {str(e)}")
         return []
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 def store_embeddings(
     client: QdrantClient,
